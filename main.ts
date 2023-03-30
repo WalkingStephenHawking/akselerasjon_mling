@@ -1,10 +1,10 @@
 radio.onReceivedNumber(function (receivedNumber) {
-    if (receivedNumber == 0) {
-        current_state = 0
-    } else if (receivedNumber == 1) {
+    if (receivedNumber == 1) {
         current_state = 1
-    } else {
+    } else if (receivedNumber == 2) {
         current_state = 2
+    } else {
+        current_state = 3
     }
 })
 let current_state = 0
@@ -12,22 +12,19 @@ radio.setGroup(98725)
 let time_count = 0
 datalogger.deleteLog()
 datalogger.includeTimestamp(FlashLogTimeStampFormat.Milliseconds)
-loops.everyInterval(1, function () {
-	
-})
 basic.forever(function () {
-    while (current_state == 0) {
-        basic.showIcon(IconNames.Yes)
-        datalogger.log(datalogger.createCV("aks_styrke", input.acceleration(Dimension.Strength)))
-        datalogger.log(datalogger.createCV("aks_y", input.acceleration(Dimension.Y)))
-        datalogger.log(datalogger.createCV("aks_z", input.acceleration(Dimension.Z)))
-        datalogger.log(datalogger.createCV("aks_x", input.acceleration(Dimension.X)))
-    }
     while (current_state == 1) {
-        basic.showIcon(IconNames.Square)
+        datalogger.log(
+        datalogger.createCV("aks_styrke", input.acceleration(Dimension.Strength)),
+        datalogger.createCV("aks_y", input.acceleration(Dimension.Y)),
+        datalogger.createCV("aks_x", input.acceleration(Dimension.X)),
+        datalogger.createCV("aks_z", input.acceleration(Dimension.Z))
+        )
     }
-    if (receivedNumber == 0) {
-        basic.showIcon(IconNames.No)
+    while (current_state == 2) {
+    	
+    }
+    if (current_state == 3) {
         datalogger.deleteLog()
     }
 })
